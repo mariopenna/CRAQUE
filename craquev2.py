@@ -3,13 +3,14 @@ import pandas as pd
 import plotly.express as px
 import gdown
 
-# URL compartilhável do Google Drive (alterar o final para "uc?id=FILE_ID")
-url = 'https://drive.google.com/file/d/1H6w0iTV3XysicSkJRsRfbE62nRTkzLds/view?usp=sharing'
+# URL compartilhável do Google Drive transformada para o formato aceito por gdown
+url = 'https://drive.google.com/uc?id=1H6w0iTV3XysicSkJRsRfbE62nRTkzLds'
 output = 'CRAQUE.csv'
 gdown.download(url, output, quiet=False)
 
 # Carregar o CSV
 data = pd.read_csv(output)
+
 # Título da Página
 st.title('Relação entre RAPTOR_final_Off e RAPTOR_final_Def')
 
@@ -98,7 +99,3 @@ elif campeonato != 'Todos':
     campeonato_data = data[data['Campeonato'] == campeonato]
     st.dataframe(campeonato_data, height=300)
 
-# Exibir os líderes em WAR com base nos filtros aplicados
-st.subheader("Líderes em WAR")
-top_war = data_filtered.sort_values(by='WAR', ascending=False)
-st.write(top_war[['Player', 'Squad', 'WAR']].head(10))  # Exibe os 10 primeiros jogadores em WAR
