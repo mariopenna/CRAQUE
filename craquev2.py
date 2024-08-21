@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px  # Certifique-se de que esta linha está presente
+import plotly.express as px  # Importando plotly.express como px
 import requests
 import io
 
@@ -104,7 +104,3 @@ elif campeonato != 'Todos':
     campeonato_data = data[data['Campeonato'] == campeonato]
     st.dataframe(campeonato_data, height=300)
 
-# Exibir os líderes em WAR com base nos filtros aplicados
-st.subheader("Líderes em WAR")
-top_war = data_filtered.sort_values(by='WAR', ascending=False)
-st.write(top_war[['Player', 'Squad', 'WAR']].head(10))  # Exibe os 10 primeiros jogadores em WAR
