@@ -3,7 +3,6 @@ import pandas as pd
 import plotly.express as px
 import requests
 import io
-import numpy as np
 
 # Baixar o arquivo do Google Drive (link direto)
 url = 'https://drive.google.com/uc?export=download&id=1H6w0iTV3XysicSkJRsRfbE62nRTkzLds'
@@ -42,27 +41,19 @@ if player != 'Todos':
 idade_min, idade_max = st.slider('Selecione o intervalo de Idade', int(data['Idade'].min()), int(data['Idade'].max()), (int(data['Idade'].min()), int(data['Idade'].max())))
 data_filtered = data_filtered[(data_filtered['Idade'] >= idade_min) & (data_filtered['Idade'] <= idade_max)]
 
-# Adicionando Jitter para evitar sobreposição
-data_filtered['RAPTOR_final_Off'] += np.random.uniform(-0.1, 0.1, size=len(data_filtered))
-data_filtered['RAPTOR_final_Def'] += np.random.uniform(-0.1, 0.1, size=len(data_filtered))
-
 # Destacar o jogador, clube ou campeonato selecionado
 if player != 'Todos':
     data_filtered['Cor'] = data_filtered['Player'].apply(lambda x: 'Selecionado' if x == player else 'Outros')
     color_discrete_map = {'Selecionado': 'red', 'Outros': 'lightgray'}
-    opacity = 0.9
 elif squad != 'Todos':
     data_filtered['Cor'] = data_filtered['Squad'].apply(lambda x: 'Selecionado' if x == squad else 'Outros')
     color_discrete_map = {'Selecionado': 'blue', 'Outros': 'lightgray'}
-    opacity = 0.8
 elif campeonato != 'Todos':
     data_filtered['Cor'] = data_filtered['Campeonato'].apply(lambda x: 'Selecionado' if x == campeonato else 'Outros')
     color_discrete_map = {'Selecionado': 'green', 'Outros': 'lightgray'}
-    opacity = 0.7
 else:
     data_filtered['Cor'] = 'Outros'
     color_discrete_map = None
-    opacity = 0.6
 
 # Verificar se todas as colunas necessárias existem em data_filtered
 if 'RAPTOR_final_Off' in data_filtered.columns and 'RAPTOR_final_Def' in data_filtered.columns:
@@ -74,7 +65,7 @@ if 'RAPTOR_final_Off' in data_filtered.columns and 'RAPTOR_final_Def' in data_fi
         color='Cor',
         color_discrete_map=color_discrete_map,
         size_max=5,
-        opacity=opacity,
+        opacity=0.8,
         hover_name='Player',
         hover_data=['Ano', 'Idade', 'Squad', 'Campeonato'],
         title='Relação entre RAPTOR_final_Off e RAPTOR_final_Def',
@@ -117,3 +108,4 @@ elif campeonato != 'Todos':
     st.subheader(f"Dados do Campeonato Selecionado: {campeonato}")
     campeonato_data = data[data['Campeonato'] == campeonato]
     st.dataframe(campeonato_data, height=300)
+
