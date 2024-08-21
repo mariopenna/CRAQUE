@@ -41,6 +41,11 @@ if player != 'Todos':
 idade_min, idade_max = st.slider('Selecione o intervalo de Idade', int(data['Idade'].min()), int(data['Idade'].max()), (int(data['Idade'].min()), int(data['Idade'].max())))
 data_filtered = data_filtered[(data_filtered['Idade'] >= idade_min) & (data_filtered['Idade'] <= idade_max)]
 
+# Visualizar a distribuição dos dados para o Brasileirão
+if campeonato == 'Brasileirao':
+    st.write(f"Total de jogadores filtrados: {len(data_filtered)}")
+    st.write(data_filtered.describe())
+
 # Destacar o jogador, clube ou campeonato selecionado
 if player != 'Todos':
     data_filtered['Cor'] = data_filtered['Player'].apply(lambda x: 'Selecionado' if x == player else 'Outros')
@@ -57,7 +62,7 @@ else:
 
 # Verificar se todas as colunas necessárias existem em data_filtered
 if 'RAPTOR_final_Off' in data_filtered.columns and 'RAPTOR_final_Def' in data_filtered.columns:
-    # Gráfico de dispersão com Plotly
+    # Aplicar Log Scale nos eixos X e Y
     fig = px.scatter(
         data_filtered,
         x='RAPTOR_final_Off',
@@ -68,11 +73,13 @@ if 'RAPTOR_final_Off' in data_filtered.columns and 'RAPTOR_final_Def' in data_fi
         opacity=0.8,
         hover_name='Player',
         hover_data=['Ano', 'Idade', 'Squad', 'Campeonato'],
-        title='Relação entre RAPTOR_final_Off e RAPTOR_final_Def',
+        title='Relação entre RAPTOR_final_Off e RAPTOR_final_Def (Log Scale)',
         labels={
             'RAPTOR_final_Off': 'RAPTOR Final Off',
             'RAPTOR_final_Def': 'RAPTOR Final Def'
-        }
+        },
+        log_x=True,  # Aplicando Log Scale no eixo X
+        log_y=True   # Aplicando Log Scale no eixo Y
     )
 
     # Adicionar linhas de referência nos eixos X e Y para a coordenada (0,0)
