@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px  # Certifique-se de que plotly.express foi importado corretamente
+import plotly.express as px  # Importando plotly.express como px
 import requests
 import io
 
@@ -47,41 +47,45 @@ else:
     data_filtered['Cor'] = 'Outros'
     color_discrete_map = None
 
-# Certifique-se de que o gráfico tenha todas as variáveis definidas corretamente
-fig = px.scatter(
-    data_filtered,
-    x='RAPTOR_final_Off',
-    y='RAPTOR_final_Def',
-    color='Cor',
-    color_discrete_map=color_discrete_map,
-    size_max=5,
-    opacity=0.8,
-    hover_name='Player',
-    hover_data=['Ano', 'Idade', 'Squad', 'Campeonato'],
-    title='Relação entre RAPTOR_final_Off e RAPTOR_final_Def',
-    labels={
-        'RAPTOR_final_Off': 'RAPTOR Final Off',
-        'RAPTOR_final_Def': 'RAPTOR Final Def'
-    }
-)
+# Verificar se todas as colunas necessárias existem em data_filtered
+if 'RAPTOR_final_Off' in data_filtered.columns and 'RAPTOR_final_Def' in data_filtered.columns:
+    # Gráfico de dispersão com Plotly
+    fig = px.scatter(
+        data_filtered,
+        x='RAPTOR_final_Off',
+        y='RAPTOR_final_Def',
+        color='Cor',
+        color_discrete_map=color_discrete_map,
+        size_max=5,
+        opacity=0.8,
+        hover_name='Player',
+        hover_data=['Ano', 'Idade', 'Squad', 'Campeonato'],
+        title='Relação entre RAPTOR_final_Off e RAPTOR_final_Def',
+        labels={
+            'RAPTOR_final_Off': 'RAPTOR Final Off',
+            'RAPTOR_final_Def': 'RAPTOR Final Def'
+        }
+    )
 
-# Adicionar linhas de referência nos eixos X e Y para a coordenada (0,0)
-fig.add_shape(
-    type="line",
-    x0=0, y0=data_filtered['RAPTOR_final_Def'].min(),
-    x1=0, y1=data_filtered['RAPTOR_final_Def'].max(),
-    line=dict(color="Black", width=2)
-)
+    # Adicionar linhas de referência nos eixos X e Y para a coordenada (0,0)
+    fig.add_shape(
+        type="line",
+        x0=0, y0=data_filtered['RAPTOR_final_Def'].min(),
+        x1=0, y1=data_filtered['RAPTOR_final_Def'].max(),
+        line=dict(color="Black", width=2)
+    )
 
-fig.add_shape(
-    type="line",
-    x0=data_filtered['RAPTOR_final_Off'].min(), y0=0,
-    x1=data_filtered['RAPTOR_final_Off'].max(), y1=0,
-    line=dict(color="Black", width=2)
-)
+    fig.add_shape(
+        type="line",
+        x0=data_filtered['RAPTOR_final_Off'].min(), y0=0,
+        x1=data_filtered['RAPTOR_final_Off'].max(), y1=0,
+        line=dict(color="Black", width=2)
+    )
 
-# Exibir o gráfico na página do Streamlit
-st.plotly_chart(fig, use_container_width=True)
+    # Exibir o gráfico na página do Streamlit
+    st.plotly_chart(fig, use_container_width=True)
+else:
+    st.error("As colunas 'RAPTOR_final_Off' ou 'RAPTOR_final_Def' não foram encontradas.")
 
 # Exibir dados do jogador, clube ou campeonato selecionado
 if player != 'Todos':
