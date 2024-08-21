@@ -1,15 +1,15 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
-import gdown
+import io
+import requests
 
-# URL compartilhável do Google Drive (alterar o final para "uc?id=FILE_ID")
-url = 'https://drive.google.com/uc?id=1H6w0iTV3XysicSkJRsRfbE62nRTkzLds'
-output = 'CRAQUE.csv'
-gdown.download(url, output, quiet=False)
+# URL compartilhável do Google Drive transformada para link direto
+url = 'https://drive.google.com/uc?export=download&id=1H6w0iTV3XysicSkJRsRfbE62nRTkzLds'
 
-# Carregar o CSV
-data = pd.read_csv(output)
+# Fazer o download do arquivo e carregá-lo no pandas
+r = requests.get(url)
+data = pd.read_csv(io.StringIO(r.text))
+
 # Título da Página
 st.title('Relação entre RAPTOR_final_Off e RAPTOR_final_Def')
 
