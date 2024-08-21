@@ -4,12 +4,17 @@ import plotly.express as px  # Certifique-se de que esta linha está presente
 import requests
 import io
 
-# URL compartilhável do Google Drive transformada para link direto
+# URL do Google Drive convertida para download direto
 url = 'https://drive.google.com/uc?export=download&id=1H6w0iTV3XysicSkJRsRfbE62nRTkzLds'
 
-# Fazer o download do arquivo e carregá-lo no pandas
-r = requests.get(url)
-data = pd.read_csv(io.StringIO(r.text))
+# Download do arquivo
+@st.cache_data
+def load_data():
+    r = requests.get(url)
+    data = pd.read_csv(io.StringIO(r.text))
+    return data
+
+data = load_data()
 
 # Título da Página
 st.title('Relação entre RAPTOR_final_Off e RAPTOR_final_Def')
