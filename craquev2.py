@@ -1,19 +1,27 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px  # Importando plotly.express como px
+import plotly.express as px
 import requests
 import io
 
 # Baixar o arquivo do Google Drive (link direto)
 url = 'https://drive.google.com/uc?export=download&id=1H6w0iTV3XysicSkJRsRfbE62nRTkzLds'
 
-@st.cache_data
+@st.cache_data(hash_funcs={"requests.sessions.Session": id})
 def load_data():
-    r = requests.get(url)
-    data = pd.read_csv(io.StringIO(r.text))
-    return data
+    try:
+        r = requests.get(url)
+        r.raise_for_status()  # Verificar se houve erro na requisição
+        data = pd.read_csv(io.StringIO(r.text))
+        return data
+    except requests.exceptions.RequestException as e:
+        st.error(f"Erro ao carregar os dados: {e}")
+        return pd.DataFrame()  # Retorna um DataFrame vazio em caso de erro
 
 data = load_data()
+
+if data.empty:
+    st.stop()  # Para a execução do app se os dados não forem carregados
 
 # Filtros e ajustes na data_filtered
 campeonato = st.selectbox('Selecione um Campeonato', options=['Todos'] + list(data['Campeonato'].unique()))
@@ -35,13 +43,13 @@ data_filtered = data[(data['Idade'] >= idade_min) & (data['Idade'] <= idade_max)
 
 # Destacar o jogador, clube ou campeonato selecionado
 if player != 'Todos':
-    data_filtered['Cor'] = data_filtered['Player'].apply(lambda x: 'Selecionado' if x == player else 'Outros')
+    data_filtered['Cor'] = data_filtered['Player'].apply(lambda x: 'Selecionado' se x == player else 'Outros')
     color_discrete_map = {'Selecionado': 'red', 'Outros': 'lightgray'}
 elif squad != 'Todos':
-    data_filtered['Cor'] = data_filtered['Squad'].apply(lambda x: 'Selecionado' if x == squad else 'Outros')
+    data_filtered['Cor'] = data_filtered['Squad'].apply(lambda x: 'Selecionado' se x == squad else 'Outros')
     color_discrete_map = {'Selecionado': 'blue', 'Outros': 'lightgray'}
 elif campeonato != 'Todos':
-    data_filtered['Cor'] = data_filtered['Campeonato'].apply(lambda x: 'Selecionado' if x == campeonato else 'Outros')
+    data_filtered['Cor'] = data_filtered['Campeonato'].apply(lambda x: 'Selecionado' se x == campeonato else 'Outros')
     color_discrete_map = {'Selecionado': 'green', 'Outros': 'lightgray'}
 else:
     data_filtered['Cor'] = 'Outros'
@@ -100,5 +108,3 @@ elif campeonato != 'Todos':
     st.subheader(f"Dados do Campeonato Selecionado: {campeonato}")
     campeonato_data = data[data['Campeonato'] == campeonato]
     st.dataframe(campeonato_data, height=300)
-
-
