@@ -26,30 +26,30 @@ if data.empty:
 # Filtros e ajustes na data_filtered
 campeonato = st.selectbox('Selecione um Campeonato', options=['Todos'] + list(data['Campeonato'].unique()))
 if campeonato != 'Todos':
-    clubes_disponiveis = data[data['Campeonato'] == campeonato]['Squad'].unique()
+    data_filtered = data[data['Campeonato'] == campeonato]
 else:
-    clubes_disponiveis = data['Squad'].unique()
+    data_filtered = data.copy()
 
-squad = st.selectbox('Selecione um Clube', options=['Todos'] + list(clubes_disponiveis))
+squad = st.selectbox('Selecione um Clube', options=['Todos'] + list(data_filtered['Squad'].unique()))
 if squad != 'Todos':
-    jogadores_disponiveis = data[data['Squad'] == squad]['Player'].unique()
-else:
-    jogadores_disponiveis = data['Player'].unique()
+    data_filtered = data_filtered[data_filtered['Squad'] == squad]
 
-player = st.selectbox('Selecione um Jogador', options=['Todos'] + list(jogadores_disponiveis))
+player = st.selectbox('Selecione um Jogador', options=['Todos'] + list(data_filtered['Player'].unique()))
+if player != 'Todos':
+    data_filtered = data_filtered[data_filtered['Player'] == player]
 
 idade_min, idade_max = st.slider('Selecione o intervalo de Idade', int(data['Idade'].min()), int(data['Idade'].max()), (int(data['Idade'].min()), int(data['Idade'].max())))
-data_filtered = data[(data['Idade'] >= idade_min) & (data['Idade'] <= idade_max)]
+data_filtered = data_filtered[(data_filtered['Idade'] >= idade_min) & (data_filtered['Idade'] <= idade_max)]
 
 # Destacar o jogador, clube ou campeonato selecionado
 if player != 'Todos':
-    data_filtered['Cor'] = data_filtered['Player'].apply(lambda x: 'Selecionado' se x == player else 'Outros')
+    data_filtered['Cor'] = data_filtered['Player'].apply(lambda x: 'Selecionado' if x == player else 'Outros')
     color_discrete_map = {'Selecionado': 'red', 'Outros': 'lightgray'}
 elif squad != 'Todos':
-    data_filtered['Cor'] = data_filtered['Squad'].apply(lambda x: 'Selecionado' se x == squad else 'Outros')
+    data_filtered['Cor'] = data_filtered['Squad'].apply(lambda x: 'Selecionado' if x == squad else 'Outros')
     color_discrete_map = {'Selecionado': 'blue', 'Outros': 'lightgray'}
 elif campeonato != 'Todos':
-    data_filtered['Cor'] = data_filtered['Campeonato'].apply(lambda x: 'Selecionado' se x == campeonato else 'Outros')
+    data_filtered['Cor'] = data_filtered['Campeonato'].apply(lambda x: 'Selecionado' if x == campeonato else 'Outros')
     color_discrete_map = {'Selecionado': 'green', 'Outros': 'lightgray'}
 else:
     data_filtered['Cor'] = 'Outros'
@@ -108,3 +108,4 @@ elif campeonato != 'Todos':
     st.subheader(f"Dados do Campeonato Selecionado: {campeonato}")
     campeonato_data = data[data['Campeonato'] == campeonato]
     st.dataframe(campeonato_data, height=300)
+
