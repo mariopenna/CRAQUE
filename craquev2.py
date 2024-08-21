@@ -1,7 +1,8 @@
 import streamlit as st
 import pandas as pd
-import io
+import plotly.express as px  # Certifique-se de que esta linha está presente
 import requests
+import io
 
 # URL compartilhável do Google Drive transformada para link direto
 url = 'https://drive.google.com/uc?export=download&id=1H6w0iTV3XysicSkJRsRfbE62nRTkzLds'
