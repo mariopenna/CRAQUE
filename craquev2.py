@@ -1,13 +1,12 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px  # Importando plotly.express como px
+import plotly.express as px  # Certifique-se de que plotly.express foi importado corretamente
 import requests
 import io
 
-# URL do Google Drive convertida para download direto
+# Baixar o arquivo do Google Drive (link direto)
 url = 'https://drive.google.com/uc?export=download&id=1H6w0iTV3XysicSkJRsRfbE62nRTkzLds'
 
-# Download do arquivo
 @st.cache_data
 def load_data():
     r = requests.get(url)
@@ -16,27 +15,21 @@ def load_data():
 
 data = load_data()
 
-# Título da Página
-st.title('Relação entre RAPTOR_final_Off e RAPTOR_final_Def')
-
-# Filtro por Campeonato
+# Filtros e ajustes na data_filtered
 campeonato = st.selectbox('Selecione um Campeonato', options=['Todos'] + list(data['Campeonato'].unique()))
 if campeonato != 'Todos':
     clubes_disponiveis = data[data['Campeonato'] == campeonato]['Squad'].unique()
 else:
     clubes_disponiveis = data['Squad'].unique()
 
-# Filtro por Clube (exibe apenas clubes do campeonato selecionado)
 squad = st.selectbox('Selecione um Clube', options=['Todos'] + list(clubes_disponiveis))
 if squad != 'Todos':
     jogadores_disponiveis = data[data['Squad'] == squad]['Player'].unique()
 else:
     jogadores_disponiveis = data['Player'].unique()
 
-# Filtro por Jogador (exibe apenas jogadores do clube e campeonato selecionados)
 player = st.selectbox('Selecione um Jogador', options=['Todos'] + list(jogadores_disponiveis))
 
-# Filtro por Idade
 idade_min, idade_max = st.slider('Selecione o intervalo de Idade', int(data['Idade'].min()), int(data['Idade'].max()), (int(data['Idade'].min()), int(data['Idade'].max())))
 data_filtered = data[(data['Idade'] >= idade_min) & (data['Idade'] <= idade_max)]
 
@@ -54,7 +47,7 @@ else:
     data_filtered['Cor'] = 'Outros'
     color_discrete_map = None
 
-# Gráfico de dispersão com Plotly
+# Certifique-se de que o gráfico tenha todas as variáveis definidas corretamente
 fig = px.scatter(
     data_filtered,
     x='RAPTOR_final_Off',
@@ -103,4 +96,5 @@ elif campeonato != 'Todos':
     st.subheader(f"Dados do Campeonato Selecionado: {campeonato}")
     campeonato_data = data[data['Campeonato'] == campeonato]
     st.dataframe(campeonato_data, height=300)
+
 
