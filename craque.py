@@ -37,7 +37,7 @@ data = data.rename(columns={
 # Criar as páginas
 page = st.sidebar.radio("Navegação", ["Sobre", "Análise Geral", "Tabela", "Comparação de Jogadores"])
 
-if page == "Capa":
+if page == "Sobre":
     st.title("Projeto CRAQUE: Cálculo de Rendimentos de Atletas")
     st.write("""
     Bem-vindo ao projeto CRAQUE! Este projeto visa analisar o desempenho de jogadores de futebol utilizando um modelo 
@@ -47,8 +47,8 @@ if page == "Capa":
     ou comparar dois jogadores específicos.
     """)
 
-elif page == "Análise - Gráfico de Dispersão":
-    st.title("Análise - Gráfico de Dispersão")
+elif page == "Análise Geral":
+    st.title("Análise Geral")
 
     # Filtro por Campeonato
     campeonato = st.selectbox('Selecione um Campeonato', options=['Todos'] + list(data['Campeonato'].unique()))
@@ -105,8 +105,8 @@ elif page == "Análise - Gráfico de Dispersão":
     # Exibir o gráfico na página do Streamlit
     st.plotly_chart(fig, use_container_width=True)
 
-elif page == "Tabela Geral":
-    st.title("Tabela Geral de Jogadores")
+elif page == "Tabela":
+    st.title("Tabela")
 
     # Filtros na Tabela Geral
     campeonato = st.selectbox('Filtrar por Campeonato', options=['Todos'] + list(data['Campeonato'].unique()))
@@ -141,5 +141,6 @@ elif page == "Comparação de Jogadores":
     # Exibir a tabela comparativa
     st.write(f"Comparando {jogador1} e {jogador2}:")
     st.dataframe(comparacao.reset_index(drop=True))
+
 
 
