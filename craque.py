@@ -117,6 +117,10 @@ elif page == "Tabela Geral":
     if squad != 'Todos':
         data = data[data['Time'] == squad]
 
+    jogador = st.selectbox('Filtrar por Jogador', options=['Todos'] + list(data['Jogador'].unique()))
+    if jogador != 'Todos':
+        data = data[data['Jogador'] == jogador]
+
     idade_min, idade_max = st.slider('Filtrar por Idade', int(data['Idade'].min()), int(data['Idade'].max()), (int(data['Idade'].min()), int(data['Idade'].max())))
     data = data[(data['Idade'] >= idade_min) & (data['Idade'] <= idade_max)]
 
