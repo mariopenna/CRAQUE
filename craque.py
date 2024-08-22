@@ -32,10 +32,18 @@ player = st.selectbox('Selecione um Jogador', options=['Todos'] + list(jogadores
 idade_min, idade_max = st.slider('Selecione o intervalo de Idade', int(data['Idade'].min()), int(data['Idade'].max()), (int(data['Idade'].min()), int(data['Idade'].max())))
 data_filtered = data[(data['Idade'] >= idade_min) & (data['Idade'] <= idade_max)]
 
+# Aplicar filtros adicionais em data_filtered
+if player != 'Todos':
+    data_filtered = data_filtered[data_filtered['Player'] == player]
+elif squad != 'Todos':
+    data_filtered = data_filtered[data_filtered['Squad'] == squad]
+elif campeonato != 'Todos':
+    data_filtered = data_filtered[data_filtered['Campeonato'] == campeonato]
+
 # Destacar o jogador, clube ou campeonato selecionado
 if player != 'Todos':
-    data_filtered['Cor'] = data_filtered['Player'].apply(lambda x: 'Selecionado' if x == player else 'Outros')
-    color_discrete_map = {'Selecionado': 'red', 'Outros': 'lightgray'}
+    data_filtered['Cor'] = 'Selecionado'
+    color_discrete_map = {'Selecionado': 'red'}
 elif squad != 'Todos':
     data_filtered['Cor'] = data_filtered['Squad'].apply(lambda x: 'Selecionado' if x == squad else 'Outros')
     color_discrete_map = {'Selecionado': 'blue', 'Outros': 'lightgray'}
@@ -82,20 +90,7 @@ fig.add_shape(
 # Exibir o gráfico na página do Streamlit
 st.plotly_chart(fig, use_container_width=True)
 
-# Exibir dados do jogador, clube ou campeonato selecionado ou todos os jogadores por padrão
-if player != 'Todos':
-    st.subheader(f"Dados do Jogador Selecionado: {player}")
-    player_data = data[data['Player'] == player]
-    st.dataframe(player_data, height=300)
-elif squad != 'Todos':
-    st.subheader(f"Dados do Clube Selecionado: {squad}")
-    squad_data = data[data['Squad'] == squad]
-    st.dataframe(squad_data, height=300)
-elif campeonato != 'Todos':
-    st.subheader(f"Dados do Campeonato Selecionado: {campeonato}")
-    campeonato_data = data[data['Campeonato'] == campeonato]
-    st.dataframe(campeonato_data, height=300)
-else:
-    st.subheader("Dados de Todos os Jogadores")
-    st.dataframe(data, height=300)
+# Exibir dados filtrados
+st.subheader("Dados Filtrados")
+st.dataframe(data_filtered.drop(columns=['Cor']), height=300)
 
