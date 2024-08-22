@@ -2,8 +2,10 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-# Carregar o CSV
-data = pd.read_csv(r'C:\Users\mario\OneDrive\Área de Trabalho\DATA\CRAQUE.csv')
+uploaded_file = st.file_uploader("Choose a file")
+if uploaded_file is not None:
+    data = pd.read_csv(uploaded_file)
+    st.write(data)
 
 # Título da Página
 st.title('CRAQUE: Cálculo de Rendimentos de Atletas em Qualidade e Estatísticas')
