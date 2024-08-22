@@ -8,22 +8,46 @@ url = 'https://raw.githubusercontent.com/mariopenna/CRAQUE/main/CRAQUE.csv'
 # Carregar o CSV diretamente do GitHub
 data = pd.read_csv(url)
 
+# Renomear as colunas
+data.rename(columns={
+    'Player': 'Jogador',
+    'Nationality': 'Nacionalidade',
+    'Idade': 'Idade',
+    'Birthdate': 'Nascimento',
+    'Squad': 'Time',
+    'Pos': 'Posição',
+    'Campeonato': 'Campeonato',
+    'Ano': 'Temporada',
+    'Games': 'Partidas',
+    'Minutes': 'Minutos',
+    'Goals': 'Gols',
+    'Assists': 'Assistencias',
+    'GCA': 'GCA (Ações que geraram Gols)',
+    'PassesCompleted%': '%Passes Completados',
+    'TacklesWon': 'Tackles Vencidos',
+    'Interceptions': 'Interceptações',
+    'AerialDuelsWon%': '% Bolas Aéreas Vencidas',
+    'RAPTOR_final_Off': 'CRAQUE Ofensivo',
+    'RAPTOR_final_Def': 'CRAQUE Defensivo',
+    'WAR': 'WAR'
+}, inplace=True)
+
 # Título da Página
 st.title('CRAQUE: Cálculo de Rendimentos de Atletas em Qualidade e Estatísticas')
 
 # Filtro por Campeonato
 campeonato = st.selectbox('Selecione um Campeonato', options=['Todos'] + list(data['Campeonato'].unique()))
 if campeonato != 'Todos':
-    clubes_disponiveis = data[data['Campeonato'] == campeonato]['Squad'].unique()
+    clubes_disponiveis = data[data['Campeonato'] == campeonato]['Time'].unique()
 else:
-    clubes_disponiveis = data['Squad'].unique()
+    clubes_disponiveis = data['Time'].unique()
 
 # Filtro por Clube (exibe apenas clubes do campeonato selecionado)
 squad = st.selectbox('Selecione um Clube', options=['Todos'] + list(clubes_disponiveis))
 if squad != 'Todos':
-    jogadores_disponiveis = data[data['Squad'] == squad]['Player'].unique()
+    jogadores_disponiveis = data[data['Time'] == squad]['Jogador'].unique()
 else:
-    jogadores_disponiveis = data['Player'].unique()
+    jogadores_disponiveis = data['Jogador'].unique()
 
 # Filtro por Jogador (exibe apenas jogadores do clube e campeonato selecionados)
 player = st.selectbox('Selecione um Jogador', options=['Todos'] + list(jogadores_disponiveis))
@@ -34,9 +58,9 @@ data_filtered = data[(data['Idade'] >= idade_min) & (data['Idade'] <= idade_max)
 
 # Aplicar filtros adicionais em data_filtered
 if player != 'Todos':
-    data_filtered = data_filtered[data_filtered['Player'] == player]
+    data_filtered = data_filtered[data_filtered['Jogador'] == player]
 elif squad != 'Todos':
-    data_filtered = data_filtered[data_filtered['Squad'] == squad]
+    data_filtered = data_filtered[data_filtered['Time'] == squad]
 elif campeonato != 'Todos':
     data_filtered = data_filtered[data_filtered['Campeonato'] == campeonato]
 
@@ -45,7 +69,7 @@ if player != 'Todos':
     data_filtered['Cor'] = 'Selecionado'
     color_discrete_map = {'Selecionado': 'red'}
 elif squad != 'Todos':
-    data_filtered['Cor'] = data_filtered['Squad'].apply(lambda x: 'Selecionado' if x == squad else 'Outros')
+    data_filtered['Cor'] = data_filtered['Time'].apply(lambda x: 'Selecionado' if x == squad else 'Outros')
     color_discrete_map = {'Selecionado': 'blue', 'Outros': 'lightgray'}
 elif campeonato != 'Todos':
     data_filtered['Cor'] = data_filtered['Campeonato'].apply(lambda x: 'Selecionado' if x == campeonato else 'Outros')
@@ -57,33 +81,33 @@ else:
 # Gráfico de dispersão com Plotly
 fig = px.scatter(
     data_filtered,
-    x='RAPTOR_final_Off',
-    y='RAPTOR_final_Def',
+    x='CRAQUE Ofensivo',
+    y='CRAQUE Defensivo',
     color='Cor',
     color_discrete_map=color_discrete_map,
     size_max=5,
     opacity=0.8,
-    hover_name='Player',
-    hover_data=['Ano', 'Idade', 'Squad', 'Campeonato'],
+    hover_name='Jogador',
+    hover_data=['Temporada', 'Idade', 'Time', 'Campeonato'],
     title='Relação entre CRAQUE Ofensivo vs CRAQUE Defensivo',
     labels={
-        'RAPTOR_final_Off': 'CRAQUE Ofensivo',
-        'RAPTOR_final_Def': 'CRAQUE Defensivo'
+        'CRAQUE Ofensivo': 'CRAQUE Ofensivo',
+        'CRAQUE Defensivo': 'CRAQUE Defensivo'
     }
 )
 
 # Adicionar linhas de referência nos eixos X e Y para a coordenada (0,0)
 fig.add_shape(
     type="line",
-    x0=0, y0=data_filtered['RAPTOR_final_Def'].min(),
-    x1=0, y1=data_filtered['RAPTOR_final_Def'].max(),
+    x0=0, y0=data_filtered['CRAQUE Defensivo'].min(),
+    x1=0, y1=data_filtered['CRAQUE Defensivo'].max(),
     line=dict(color="Black", width=2)
 )
 
 fig.add_shape(
     type="line",
-    x0=data_filtered['RAPTOR_final_Off'].min(), y0=0,
-    x1=data_filtered['RAPTOR_final_Off'].max(), y1=0,
+    x0=data_filtered['CRAQUE Ofensivo'].min(), y0=0,
+    x1=data_filtered['CRAQUE Ofensivo'].max(), y1=0,
     line=dict(color="Black", width=2)
 )
 
