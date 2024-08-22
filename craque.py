@@ -132,7 +132,7 @@ elif page == "Comparação de Jogadores":
 
     # Filtrar os dados dos jogadores selecionados
     comparacao = data[(data['Jogador'] == jogador1) | (data['Jogador'] == jogador2)]
-    comparacao = comparacao[['Jogador', 'Time', 'CRAQUE Ofensivo', 'CRAQUE Defensivo', 'WAR']]
+    comparacao = comparacao[['Jogador', 'Time', 'Temporada', 'CRAQUE Ofensivo', 'CRAQUE Defensivo', 'WAR']]
 
     # Exibir a tabela comparativa
     st.write(f"Comparando {jogador1} e {jogador2}:")
