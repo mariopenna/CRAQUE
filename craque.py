@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 
 # URL do arquivo CSV no GitHub
-url = 'https://raw.githubusercontent.com/usuario/repositorio/main/CRAQUE.csv'
+url = 'https://github.com/mariopenna/CRAQUE/blob/main/CRAQUE.csv'
 
 # Carregar o CSV diretamente do GitHub
 data = pd.read_csv(url)
