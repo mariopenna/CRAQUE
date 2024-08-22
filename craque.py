@@ -69,20 +69,27 @@ elif page == "Análise de Dados":
     idade_min, idade_max = st.slider('Selecione o intervalo de Idade', int(data['Idade'].min()), int(data['Idade'].max()), (int(data['Idade'].min()), int(data['Idade'].max())))
     data_filtered = data[(data['Idade'] >= idade_min) & (data['Idade'] <= idade_max)]
 
-    # Aplicar filtros adicionais em data_filtered
+    # Destacar o jogador, clube ou campeonato selecionado
     if player != 'Todos':
-        data_filtered = data_filtered[data_filtered['Jogador'] == player]
+        data_filtered['Cor'] = data_filtered['Jogador'].apply(lambda x: 'Selecionado' if x == player else 'Outros')
+        color_discrete_map = {'Selecionado': 'red', 'Outros': 'lightgray'}
     elif squad != 'Todos':
-        data_filtered = data_filtered[data_filtered['Time'] == squad]
+        data_filtered['Cor'] = data_filtered['Time'].apply(lambda x: 'Selecionado' if x == squad else 'Outros')
+        color_discrete_map = {'Selecionado': 'blue', 'Outros': 'lightgray'}
     elif campeonato != 'Todos':
-        data_filtered = data_filtered[data_filtered['Campeonato'] == campeonato]
+        data_filtered['Cor'] = data_filtered['Campeonato'].apply(lambda x: 'Selecionado' if x == campeonato else 'Outros')
+        color_discrete_map = {'Selecionado': 'green', 'Outros': 'lightgray'}
+    else:
+        data_filtered['Cor'] = 'Outros'
+        color_discrete_map = None
 
     # Gráfico de dispersão com Plotly
     fig = px.scatter(
         data_filtered,
         x='CRAQUE Ofensivo',
         y='CRAQUE Defensivo',
-        color='Time',
+        color='Cor',
+        color_discrete_map=color_discrete_map,
         size_max=5,
         opacity=0.8,
         hover_name='Jogador',
@@ -114,7 +121,7 @@ elif page == "Análise de Dados":
 
     # Exibir dados filtrados
     st.subheader("Dados Filtrados")
-    st.dataframe(data_filtered, height=300)
+    st.dataframe(data_filtered.drop(columns=['Cor']), height=300)
 
 elif page == "Sobre o Modelo CRAQUE":
     st.title("Sobre o Modelo CRAQUE")
@@ -130,7 +137,5 @@ elif page == "Sobre o Modelo CRAQUE":
     ### Como Usar
     Use a página de Análise de Dados para explorar as estatísticas dos jogadores e visualizar a relação entre o CRAQUE Ofensivo e CRAQUE Defensivo.
     """)
-
-
 
 
