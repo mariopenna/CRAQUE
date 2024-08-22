@@ -58,10 +58,6 @@ elif page == "Análise - Gráfico de Dispersão":
 
     # Filtro por Clube (exibe apenas clubes do campeonato selecionado)
     squad = st.selectbox('Selecione um Clube', options=['Todos'] + list(clubes_disponiveis))
-    if squad != 'Todos':
-        jogadores_disponiveis = data[data['Time'] == squad]['Jogador'].unique()
-    else:
-        jogadores_disponiveis = data['Jogador'].unique()
 
     # Filtro por Idade
     idade_min, idade_max = st.slider('Selecione o intervalo de Idade', int(data['Idade'].min()), int(data['Idade'].max()), (int(data['Idade'].min()), int(data['Idade'].max())))
@@ -73,29 +69,17 @@ elif page == "Análise - Gráfico de Dispersão":
     if squad != 'Todos':
         data_filtered = data_filtered[data_filtered['Time'] == squad]
 
-    # Destacar a seleção no gráfico
-    if squad != 'Todos':
-        data_filtered['Cor'] = 'Selecionado'
-        color_discrete_map = {'Selecionado': 'blue'}
-    elif campeonato != 'Todos':
-        data_filtered['Cor'] = 'Selecionado'
-        color_discrete_map = {'Selecionado': 'green'}
-    else:
-        data_filtered['Cor'] = 'Outros'
-        color_discrete_map = None
-
-    # Gráfico de dispersão com Plotly
+    # Gráfico de dispersão com cores para diferentes times
     fig = px.scatter(
         data_filtered,
         x='CRAQUE Ofensivo',
         y='CRAQUE Defensivo',
-        color='Cor',
-        color_discrete_map=color_discrete_map,
+        color='Time',  # Times representados por cores diferentes
         size_max=5,
         opacity=0.8,
         hover_name='Jogador',
-        hover_data=['Temporada', 'Idade', 'Time', 'Campeonato'],
-        title='Relação entre CRAQUE Ofensivo vs CRAQUE Defensivo',
+        hover_data=['Temporada', 'Idade', 'Campeonato'],
+        title='Relação entre CRAQUE Ofensivo vs CRAQUE Defensivo por Time',
         labels={
             'CRAQUE Ofensivo': 'CRAQUE Ofensivo',
             'CRAQUE Defensivo': 'CRAQUE Defensivo'
