@@ -59,10 +59,10 @@ fig = px.scatter(
     opacity=0.8,
     hover_name='Player',
     hover_data=['Ano', 'Idade', 'Squad', 'Campeonato'],
-    title='Relação entre RAPTOR_final_Off e RAPTOR_final_Def',
+    title='Relação entre CRAQUE Ofensivo vs CRAQUE Defensivo',
     labels={
-        'RAPTOR_final_Off': 'RAPTOR Final Off',
-        'RAPTOR_final_Def': 'RAPTOR Final Def'
+        'RAPTOR_final_Off': 'RCRAQUE Ofensivo',
+        'RAPTOR_final_Def': 'CRAQUE Defensivo'
     }
 )
 
