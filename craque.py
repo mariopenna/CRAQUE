@@ -2,10 +2,13 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-uploaded_file = st.file_uploader("Choose a file")
-if uploaded_file is not None:
-    data = pd.read_csv(uploaded_file)
-    st.write(data)
+# URL do arquivo CSV no GitHub
+url = 'https://raw.githubusercontent.com/usuario/repositorio/main/CRAQUE.csv'
+
+# Carregar o CSV diretamente do GitHub
+data = pd.read_csv(url)
+
+# Restante do seu código
 
 # Título da Página
 st.title('CRAQUE: Cálculo de Rendimentos de Atletas em Qualidade e Estatísticas')
