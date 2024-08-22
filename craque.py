@@ -35,7 +35,7 @@ data = data.rename(columns={
 })
 
 # Criar as páginas
-page = st.sidebar.radio("Navegação", ["Capa", "Análise - Gráfico de Dispersão", "Tabela Geral"])
+page = st.sidebar.radio("Navegação", ["Capa", "Análise - Gráfico de Dispersão", "Tabela Geral", "Comparação de Jogadores"])
 
 if page == "Capa":
     st.title("Projeto CRAQUE: Cálculo de Rendimentos de Atletas")
@@ -43,7 +43,8 @@ if page == "Capa":
     Bem-vindo ao projeto CRAQUE! Este projeto visa analisar o desempenho de jogadores de futebol utilizando um modelo 
     inovador chamado CRAQUE (Cálculo de Rendimentos de Atletas em Qualidade e Estatísticas).
     
-    Use a navegação à esquerda para explorar a análise gráfica dos dados ou visualizar a tabela geral com todos os jogadores.
+    Use a navegação à esquerda para explorar a análise gráfica dos dados, visualizar a tabela geral com todos os jogadores, 
+    ou comparar dois jogadores específicos.
     """)
 
 elif page == "Análise - Gráfico de Dispersão":
@@ -121,5 +122,20 @@ elif page == "Tabela Geral":
 
     # Exibir a tabela geral com todos os filtros aplicados
     st.dataframe(data, height=500, use_container_width=True)
+
+elif page == "Comparação de Jogadores":
+    st.title("Comparação de Jogadores")
+
+    # Seleção de dois jogadores para comparação
+    jogador1 = st.selectbox('Selecione o Primeiro Jogador', options=data['Jogador'].unique())
+    jogador2 = st.selectbox('Selecione o Segundo Jogador', options=data['Jogador'].unique())
+
+    # Filtrar os dados dos jogadores selecionados
+    comparacao = data[(data['Jogador'] == jogador1) | (data['Jogador'] == jogador2)]
+    comparacao = comparacao[['Jogador', 'Time', 'CRAQUE Ofensivo', 'CRAQUE Defensivo', 'WAR']]
+
+    # Exibir a tabela comparativa
+    st.write(f"Comparando {jogador1} e {jogador2}:")
+    st.dataframe(comparacao.reset_index(drop=True))
 
 
