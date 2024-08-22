@@ -8,8 +8,6 @@ url = 'https://raw.githubusercontent.com/mariopenna/CRAQUE/main/CRAQUE.csv'
 # Carregar o CSV diretamente do GitHub
 data = pd.read_csv(url)
 
-# Restante do seu código
-
 # Título da Página
 st.title('CRAQUE: Cálculo de Rendimentos de Atletas em Qualidade e Estatísticas')
 
@@ -61,7 +59,7 @@ fig = px.scatter(
     hover_data=['Ano', 'Idade', 'Squad', 'Campeonato'],
     title='Relação entre CRAQUE Ofensivo vs CRAQUE Defensivo',
     labels={
-        'RAPTOR_final_Off': 'RCRAQUE Ofensivo',
+        'RAPTOR_final_Off': 'CRAQUE Ofensivo',
         'RAPTOR_final_Def': 'CRAQUE Defensivo'
     }
 )
@@ -84,7 +82,7 @@ fig.add_shape(
 # Exibir o gráfico na página do Streamlit
 st.plotly_chart(fig, use_container_width=True)
 
-# Exibir dados do jogador, clube ou campeonato selecionado
+# Exibir dados do jogador, clube ou campeonato selecionado ou todos os jogadores por padrão
 if player != 'Todos':
     st.subheader(f"Dados do Jogador Selecionado: {player}")
     player_data = data[data['Player'] == player]
@@ -97,4 +95,7 @@ elif campeonato != 'Todos':
     st.subheader(f"Dados do Campeonato Selecionado: {campeonato}")
     campeonato_data = data[data['Campeonato'] == campeonato]
     st.dataframe(campeonato_data, height=300)
+else:
+    st.subheader("Dados de Todos os Jogadores")
+    st.dataframe(data, height=300)
 
