@@ -35,21 +35,17 @@ data = data.rename(columns={
 })
 
 # Criar as páginas
-page = st.sidebar.radio("Navegação", ["Sobre", "Análise Geral", "Tabelão", "Comparação de Jogadores"])
+page = st.sidebar.radio("Navegação", ["Sobre", "Análise Geral", "Tabela", "Comparação de Jogadores"])
 
 if page == "Capa":
     st.title("Projeto CRAQUE: Cálculo de Rendimentos de Atletas")
     st.write("""
-    Bem-vindo ao projeto CRAQUE(Cálculo de Rendimentos de Atletas em Qualidade e Estatísticas)! 
-             
-    Inspirado no modelo RAPTOR do FiveThirtyEight, o modelo CRAQUE aproveita estatísticas detalhadas e algoritmos para avaliar a contribuição única de cada jogador em campo e quantificar as vitórias acima de um jogador substituto, ajustadas pelo tempo de jogo.
-
-    Para saber mais acesse minha apresentação sobre o tema no LinkedIn: https://www.linkedin.com/feed/update/urn:li:activity:7226935140541710336/
-
+    Bem-vindo ao projeto CRAQUE! Este projeto visa analisar o desempenho de jogadores de futebol utilizando um modelo 
+    inovador chamado CRAQUE (Cálculo de Rendimentos de Atletas em Qualidade e Estatísticas).
+    
     Use a navegação à esquerda para explorar a análise gráfica dos dados, visualizar a tabela geral com todos os jogadores, 
     ou comparar dois jogadores específicos.
-
-     """)
+    """)
 
 elif page == "Análise - Gráfico de Dispersão":
     st.title("Análise - Gráfico de Dispersão")
