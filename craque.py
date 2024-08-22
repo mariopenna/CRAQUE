@@ -35,18 +35,19 @@ data = data.rename(columns={
 })
 
 # Criar as páginas
-page = st.sidebar.radio("Navegação", ["Visão Geral", "Análise de Dados", "Sobre o Modelo CRAQUE"])
+page = st.sidebar.radio("Navegação", ["Capa", "Análise - Gráfico de Dispersão", "Tabela Geral"])
 
-if page == "Visão Geral":
-    st.title("Visão Geral do Projeto")
+if page == "Capa":
+    st.title("Projeto CRAQUE: Cálculo de Rendimentos de Atletas")
     st.write("""
-    Bem-vindo ao projeto CRAQUE! Aqui você encontrará uma análise detalhada sobre o desempenho de jogadores
-    de futebol utilizando o modelo CRAQUE (Cálculo de Rendimentos de Atletas em Qualidade e Estatísticas).
-    Use as páginas de navegação para explorar diferentes seções.
+    Bem-vindo ao projeto CRAQUE! Este projeto visa analisar o desempenho de jogadores de futebol utilizando um modelo 
+    inovador chamado CRAQUE (Cálculo de Rendimentos de Atletas em Qualidade e Estatísticas).
+    
+    Use a navegação à esquerda para explorar a análise gráfica dos dados ou visualizar a tabela geral com todos os jogadores.
     """)
 
-elif page == "Análise de Dados":
-    st.title("Análise de Dados com CRAQUE")
+elif page == "Análise - Gráfico de Dispersão":
+    st.title("Análise - Gráfico de Dispersão")
 
     # Filtro por Campeonato
     campeonato = st.selectbox('Selecione um Campeonato', options=['Todos'] + list(data['Campeonato'].unique()))
@@ -62,23 +63,23 @@ elif page == "Análise de Dados":
     else:
         jogadores_disponiveis = data['Jogador'].unique()
 
-    # Filtro por Jogador (exibe apenas jogadores do clube e campeonato selecionados)
-    player = st.selectbox('Selecione um Jogador', options=['Todos'] + list(jogadores_disponiveis))
-
     # Filtro por Idade
     idade_min, idade_max = st.slider('Selecione o intervalo de Idade', int(data['Idade'].min()), int(data['Idade'].max()), (int(data['Idade'].min()), int(data['Idade'].max())))
     data_filtered = data[(data['Idade'] >= idade_min) & (data['Idade'] <= idade_max)]
 
-    # Destacar o jogador, clube ou campeonato selecionado
-    if player != 'Todos':
-        data_filtered['Cor'] = data_filtered['Jogador'].apply(lambda x: 'Selecionado' if x == player else 'Outros')
-        color_discrete_map = {'Selecionado': 'red', 'Outros': 'lightgray'}
-    elif squad != 'Todos':
-        data_filtered['Cor'] = data_filtered['Time'].apply(lambda x: 'Selecionado' if x == squad else 'Outros')
-        color_discrete_map = {'Selecionado': 'blue', 'Outros': 'lightgray'}
+    # Aplicar filtros adicionais em data_filtered
+    if campeonato != 'Todos':
+        data_filtered = data_filtered[data_filtered['Campeonato'] == campeonato]
+    if squad != 'Todos':
+        data_filtered = data_filtered[data_filtered['Time'] == squad]
+
+    # Destacar a seleção no gráfico
+    if squad != 'Todos':
+        data_filtered['Cor'] = 'Selecionado'
+        color_discrete_map = {'Selecionado': 'blue'}
     elif campeonato != 'Todos':
-        data_filtered['Cor'] = data_filtered['Campeonato'].apply(lambda x: 'Selecionado' if x == campeonato else 'Outros')
-        color_discrete_map = {'Selecionado': 'green', 'Outros': 'lightgray'}
+        data_filtered['Cor'] = 'Selecionado'
+        color_discrete_map = {'Selecionado': 'green'}
     else:
         data_filtered['Cor'] = 'Outros'
         color_discrete_map = None
@@ -119,23 +120,22 @@ elif page == "Análise de Dados":
     # Exibir o gráfico na página do Streamlit
     st.plotly_chart(fig, use_container_width=True)
 
-    # Exibir dados filtrados
-    st.subheader("Dados Filtrados")
-    st.dataframe(data_filtered.drop(columns=['Cor']), height=300)
+elif page == "Tabela Geral":
+    st.title("Tabela Geral de Jogadores")
 
-elif page == "Sobre o Modelo CRAQUE":
-    st.title("Sobre o Modelo CRAQUE")
-    st.write("""
-    O modelo CRAQUE (Cálculo de Rendimentos de Atletas em Qualidade e Estatísticas) foi desenvolvido para avaliar
-    o desempenho de jogadores de futebol com base em uma combinação de métricas ofensivas e defensivas.
-    
-    ### Metodologia
-    - **CRAQUE Ofensivo:** Avalia as contribuições do jogador em termos de criação de jogadas e finalizações.
-    - **CRAQUE Defensivo:** Avalia a capacidade defensiva do jogador, incluindo interceptações, tackles, e duelos aéreos.
-    - **CRAQUE Total:** Combina as pontuações ofensivas e defensivas para fornecer uma visão geral do desempenho do jogador.
+    # Filtros na Tabela Geral
+    campeonato = st.selectbox('Filtrar por Campeonato', options=['Todos'] + list(data['Campeonato'].unique()))
+    if campeonato != 'Todos':
+        data = data[data['Campeonato'] == campeonato]
 
-    ### Como Usar
-    Use a página de Análise de Dados para explorar as estatísticas dos jogadores e visualizar a relação entre o CRAQUE Ofensivo e CRAQUE Defensivo.
-    """)
+    squad = st.selectbox('Filtrar por Clube', options=['Todos'] + list(data['Time'].unique()))
+    if squad != 'Todos':
+        data = data[data['Time'] == squad]
+
+    idade_min, idade_max = st.slider('Filtrar por Idade', int(data['Idade'].min()), int(data['Idade'].max()), (int(data['Idade'].min()), int(data['Idade'].max())))
+    data = data[(data['Idade'] >= idade_min) & (data['Idade'] <= idade_max)]
+
+    # Exibir a tabela geral com todos os filtros aplicados
+    st.dataframe(data, height=500, use_container_width=True)
 
 
