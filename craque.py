@@ -8,29 +8,31 @@ url = 'https://raw.githubusercontent.com/mariopenna/CRAQUE/main/CRAQUE.csv'
 # Carregar o CSV diretamente do GitHub
 data = pd.read_csv(url)
 
-# Renomear as colunas
-data.rename(columns={
+# Renomear as colunas conforme solicitado
+data = data.rename(columns={
     'Player': 'Jogador',
-    'Nationality': 'Nacionalidade',
+    'Nation': 'Nacionalidade',
     'Idade': 'Idade',
-    'Birthdate': 'Nascimento',
+    'Born': 'Nascimento',
     'Squad': 'Time',
     'Pos': 'Posição',
     'Campeonato': 'Campeonato',
     'Ano': 'Temporada',
-    'Games': 'Partidas',
-    'Minutes': 'Minutos',
-    'Goals': 'Gols',
-    'Assists': 'Assistencias',
+    'MP': 'Partidas',
+    'Min': 'Minutos',
+    'Gls': 'Gols',
+    'Ast': 'Assistencias',
     'GCA': 'GCA (Ações que geraram Gols)',
-    'PassesCompleted%': '%Passes Completados',
-    'TacklesWon': 'Tackles Vencidos',
-    'Interceptions': 'Interceptações',
-    'AerialDuelsWon%': '% Bolas Aéreas Vencidas',
+    'Cmp%_total': '%Passes Completados',
+    'TklW_tackles': 'Tackles Vencidos',
+    'Int_blocks': 'Interceptações',
+    'CrdY_performance': 'Cartões Amarelos',
+    'Won%_aereal-duels': '% Bolas Aéreas Vencidas',
     'RAPTOR_final_Off': 'CRAQUE Ofensivo',
     'RAPTOR_final_Def': 'CRAQUE Defensivo',
+    'RAPTOR_final_Total': 'CRAQUE Total',
     'WAR': 'WAR'
-}, inplace=True)
+})
 
 # Título da Página
 st.title('CRAQUE: Cálculo de Rendimentos de Atletas em Qualidade e Estatísticas')
@@ -117,4 +119,5 @@ st.plotly_chart(fig, use_container_width=True)
 # Exibir dados filtrados
 st.subheader("Dados Filtrados")
 st.dataframe(data_filtered.drop(columns=['Cor']), height=300)
+
 
