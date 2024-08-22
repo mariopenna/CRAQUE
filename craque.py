@@ -116,8 +116,8 @@ fig.add_shape(
 # Exibir o gráfico na página do Streamlit
 st.plotly_chart(fig, use_container_width=True)
 
-# Exibir dados filtrados
+# Exibir dados filtrados com largura ajustada
 st.subheader("Dados Filtrados")
-st.dataframe(data_filtered.drop(columns=['Cor']), height=300)
+st.dataframe(data_filtered.drop(columns=['Cor']), height=300, use_container_width=True)
 
 
