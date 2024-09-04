@@ -180,3 +180,4 @@ elif page == "Comparação de Jogadores":
     st.dataframe(comparacao.reset_index(drop=True))
 
 
+
