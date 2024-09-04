@@ -170,5 +170,13 @@ elif page == "Comparação de Jogadores":
         temporada = st.selectbox('Filtrar por Temporada', options=['Todas'] + sorted(data['Temporada'].unique()))
         comparacao = data[(data['Jogador'] == jogador1) | (data['Jogador'] == jogador2)]
         if temporada != 'Todas':
-            comparacao = comparacao[comparacao
+            comparacao = comparacao[comparacao['Temporada'] == temporada]
+        comparacao = comparacao[['Jogador', 'Time', 'Temporada', 'CRAQUE Ofensivo', 'CRAQUE Defensivo', 'WAR']]
+    else:
+        st.error("Coluna 'Temporada' não encontrada!")
+
+    # Exibir a tabela comparativa
+    st.write(f"Comparando {jogador1} e {jogador2}:")
+    st.dataframe(comparacao.reset_index(drop=True))
+
 
