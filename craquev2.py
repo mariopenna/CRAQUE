@@ -8,17 +8,7 @@ url = 'https://raw.githubusercontent.com/mariopenna/CRAQUE/main/CRAQUE.csv'
 # Carregar o CSV diretamente do GitHub
 data = pd.read_csv(url)
 
-# Verificar se a coluna "Ano" está sendo carregada corretamente
-st.write("Visualizar as primeiras linhas dos dados:")
-st.dataframe(data.head())  # Exibe os primeiros dados para verificação
-
-# Verificar se há valores válidos na coluna 'Ano' ou 'Temporada'
-if 'Ano' in data.columns:
-    data = data.rename(columns={'Ano': 'Temporada'})  # Renomear a coluna Ano para Temporada
-elif 'Temporada' not in data.columns:
-    st.error("A coluna 'Ano' ou 'Temporada' não foi encontrada no dataset. Verifique o CSV.")
-
-# Renomear outras colunas conforme solicitado
+# Renomear as colunas conforme solicitado
 data = data.rename(columns={
     'Player': 'Jogador',
     'Nation': 'Nacionalidade',
@@ -27,6 +17,7 @@ data = data.rename(columns={
     'Squad': 'Time',
     'Pos': 'Posição',
     'Campeonato': 'Campeonato',
+    'Ano': 'Temporada',
     'MP': 'Partidas',
     'Min': 'Minutos',
     'Gls': 'Gols',
@@ -42,10 +33,6 @@ data = data.rename(columns={
     'RAPTOR_final_Total': 'CRAQUE Total',
     'WAR': 'WAR'
 })
-
-# Verificar se a coluna 'Temporada' contém dados válidos
-st.write("Exibindo valores únicos de 'Temporada':")
-st.write(data['Temporada'].unique())
 
 # Criar as páginas
 page = st.sidebar.radio("Navegação", ["Sobre", "Análise Geral", "Tabela", "Comparação de Jogadores"])
@@ -66,6 +53,11 @@ if page == "Sobre":
 elif page == "Análise Geral":
     st.title("Análise Geral")
 
+    # Filtro por Temporada
+    temporada = st.selectbox('Selecione uma Temporada', options=['Todas'] + sorted(data['Temporada'].unique()))
+    if temporada != 'Todas':
+        data = data[data['Temporada'] == temporada]
+
     # Filtro por Campeonato
     campeonato = st.selectbox('Selecione um Campeonato', options=['Todos'] + list(data['Campeonato'].unique()))
     if campeonato != 'Todos':
@@ -78,21 +70,13 @@ elif page == "Análise Geral":
 
     # Filtro por Idade
     idade_min, idade_max = st.slider('Selecione o intervalo de Idade', int(data['Idade'].min()), int(data['Idade'].max()), (int(data['Idade'].min()), int(data['Idade'].max())))
-
-    # Verificar se a coluna "Temporada" está sendo usada
-    if 'Temporada' in data.columns:
-        temporada = st.selectbox('Selecione uma Temporada', options=['Todas'] + sorted(data['Temporada'].unique()))
-    else:
-        st.error("Coluna 'Temporada' não encontrada!")
-
-    # Aplicar os filtros nos dados
     data_filtered = data[(data['Idade'] >= idade_min) & (data['Idade'] <= idade_max)]
+
+    # Aplicar filtros adicionais em data_filtered
     if campeonato != 'Todos':
         data_filtered = data_filtered[data_filtered['Campeonato'] == campeonato]
     if squad != 'Todos':
         data_filtered = data_filtered[data_filtered['Time'] == squad]
-    if temporada != 'Todas':
-        data_filtered = data_filtered[data_filtered['Temporada'] == temporada]
 
     # Gráfico de dispersão com cores para diferentes times
     fig = px.scatter(
@@ -132,6 +116,11 @@ elif page == "Análise Geral":
 elif page == "Tabela":
     st.title("Tabela")
 
+    # Filtro por Temporada
+    temporada = st.selectbox('Filtrar por Temporada', options=['Todas'] + sorted(data['Temporada'].unique()))
+    if temporada != 'Todas':
+        data = data[data['Temporada'] == temporada]
+
     # Filtros na Tabela Geral
     campeonato = st.selectbox('Filtrar por Campeonato', options=['Todos'] + list(data['Campeonato'].unique()))
     if campeonato != 'Todos':
@@ -146,14 +135,7 @@ elif page == "Tabela":
         data = data[data['Jogador'] == jogador]
 
     idade_min, idade_max = st.slider('Filtrar por Idade', int(data['Idade'].min()), int(data['Idade'].max()), (int(data['Idade'].min()), int(data['Idade'].max())))
-
-    # Filtro por Temporada
-    if 'Temporada' in data.columns:
-        temporada = st.selectbox('Filtrar por Temporada', options=['Todas'] + sorted(data['Temporada'].unique()))
-        if temporada != 'Todas':
-            data = data[data['Temporada'] == temporada]
-    else:
-        st.error("Coluna 'Temporada' não encontrada!")
+    data = data[(data['Idade'] >= idade_min) & (data['Idade'] <= idade_max)]
 
     # Exibir a tabela geral com todos os filtros aplicados
     st.dataframe(data, height=500, use_container_width=True)
@@ -161,23 +143,21 @@ elif page == "Tabela":
 elif page == "Comparação de Jogadores":
     st.title("Comparação de Jogadores")
 
+    # Filtro por Temporada
+    temporada = st.selectbox('Filtrar por Temporada', options=['Todas'] + sorted(data['Temporada'].unique()))
+    if temporada != 'Todas':
+        data = data[data['Temporada'] == temporada]
+
     # Seleção de dois jogadores para comparação
     jogador1 = st.selectbox('Selecione o Primeiro Jogador', options=data['Jogador'].unique())
     jogador2 = st.selectbox('Selecione o Segundo Jogador', options=data['Jogador'].unique())
 
-    # Filtro por Temporada
-    if 'Temporada' in data.columns:
-        temporada = st.selectbox('Filtrar por Temporada', options=['Todas'] + sorted(data['Temporada'].unique()))
-        comparacao = data[(data['Jogador'] == jogador1) | (data['Jogador'] == jogador2)]
-        if temporada != 'Todas':
-            comparacao = comparacao[comparacao['Temporada'] == temporada]
-        comparacao = comparacao[['Jogador', 'Time', 'Temporada', 'CRAQUE Ofensivo', 'CRAQUE Defensivo', 'WAR']]
-    else:
-        st.error("Coluna 'Temporada' não encontrada!")
+    # Filtrar os dados dos jogadores selecionados
+    comparacao = data[(data['Jogador'] == jogador1) | (data['Jogador'] == jogador2)]
+    comparacao = comparacao[['Jogador', 'Time', 'Temporada', 'CRAQUE Ofensivo', 'CRAQUE Defensivo', 'WAR']]
 
     # Exibir a tabela comparativa
     st.write(f"Comparando {jogador1} e {jogador2}:")
     st.dataframe(comparacao.reset_index(drop=True))
-
 
 
