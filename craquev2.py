@@ -141,6 +141,13 @@ elif page == "Tabela":
     # Exibir a tabela geral com todos os filtros aplicados
     st.dataframe(data, height=500, use_container_width=True)
 
+    # Explicação do WAR abaixo da tabela
+    st.write("""
+    **Legenda:**
+    
+    - **WAR**: "Wins Above Replacement" (Vitórias Acima de um Substituto) é uma métrica que quantifica o número de vitórias adicionais que um jogador traz para seu time em comparação com um jogador substituto.
+    """)
+
 elif page == "Comparação de Jogadores":
     st.title("Comparação de Jogadores")
 
@@ -166,3 +173,9 @@ elif page == "Comparação de Jogadores":
     st.write(f"Comparando {jogador1} e {jogador2}:")
     st.dataframe(comparacao.reset_index(drop=True))
 
+    # Explicação do WAR na comparação
+    st.write("""
+    **Legenda:**
+    
+    - **WAR**: "Wins Above Replacement" (Vitórias Acima de um Substituto) é uma métrica que quantifica o número de vitórias adicionais que um jogador traz para seu time em comparação com um jogador substituto.
+    """)
