@@ -165,6 +165,16 @@ elif page == "Comparação de Jogadores":
     jogador1 = st.selectbox('Selecione o Primeiro Jogador', options=data['Jogador'].unique())
     jogador2 = st.selectbox('Selecione o Segundo Jogador', options=data['Jogador'].unique())
 
+    # Seleção das métricas para comparação
+    metricas = st.multiselect(
+    'Selecione Métricas para Comparar',
+    options=['Partidas', 'Minutos', 'Gols', 'Assistencias', 'GCA (Ações que geraram Gols)',
+             '%Passes Completados', 'Tackles Vencidos', 'Interceptações', 'Cartões Amarelos',
+             '% Bolas Aéreas Vencidas', 'CRAQUE Ofensivo', 'CRAQUE Defensivo', 'CRAQUE Total', 'WAR'],
+    default=['CRAQUE Ofensivo', 'CRAQUE Defensivo', 'CRAQUE Total', 'WAR']
+    )
+
+
     # Filtrar os dados dos jogadores selecionados
     comparacao = data[(data['Jogador'] == jogador1) | (data['Jogador'] == jogador2)]
     comparacao = comparacao[['Jogador', 'Time', 'Temporada', 'CRAQUE Ofensivo', 'CRAQUE Defensivo', 'WAR']]
