@@ -53,17 +53,17 @@ if page == "Sobre":
 elif page == "Análise Geral":
     st.title("Análise Geral")
 
-    # Filtro por Temporada
-    temporada = st.selectbox('Selecione uma Temporada', options=['Todas'] + sorted(data['Temporada'].unique()))
-    if temporada != 'Todas':
-        data = data[data['Temporada'] == temporada]
-
     # Filtro por Campeonato
     campeonato = st.selectbox('Selecione um Campeonato', options=['Todos'] + list(data['Campeonato'].unique()))
     if campeonato != 'Todos':
         clubes_disponiveis = data[data['Campeonato'] == campeonato]['Time'].unique()
     else:
         clubes_disponiveis = data['Time'].unique()
+
+    # Filtro por Temporada
+    temporada = st.selectbox('Selecione uma Temporada', options=['Todas'] + sorted(data['Temporada'].unique()))
+    if temporada != 'Todas':
+        data = data[data['Temporada'] == temporada]
 
     # Filtro por Clube (exibe apenas clubes do campeonato selecionado)
     squad = st.selectbox('Selecione um Clube', options=['Todos'] + list(clubes_disponiveis))
@@ -116,16 +116,17 @@ elif page == "Análise Geral":
 elif page == "Tabela":
     st.title("Tabela")
 
+    # Filtro por Campeonato
+    campeonato = st.selectbox('Filtrar por Campeonato', options=['Todos'] + list(data['Campeonato'].unique()))
+    if campeonato != 'Todos':
+        data = data[data['Campeonato'] == campeonato]
+
     # Filtro por Temporada
     temporada = st.selectbox('Filtrar por Temporada', options=['Todas'] + sorted(data['Temporada'].unique()))
     if temporada != 'Todas':
         data = data[data['Temporada'] == temporada]
 
     # Filtros na Tabela Geral
-    campeonato = st.selectbox('Filtrar por Campeonato', options=['Todos'] + list(data['Campeonato'].unique()))
-    if campeonato != 'Todos':
-        data = data[data['Campeonato'] == campeonato]
-
     squad = st.selectbox('Filtrar por Clube', options=['Todos'] + list(data['Time'].unique()))
     if squad != 'Todos':
         data = data[data['Time'] == squad]
@@ -143,6 +144,11 @@ elif page == "Tabela":
 elif page == "Comparação de Jogadores":
     st.title("Comparação de Jogadores")
 
+    # Filtro por Campeonato
+    campeonato = st.selectbox('Filtrar por Campeonato', options=['Todos'] + list(data['Campeonato'].unique()))
+    if campeonato != 'Todos':
+        data = data[data['Campeonato'] == campeonato]
+
     # Filtro por Temporada
     temporada = st.selectbox('Filtrar por Temporada', options=['Todas'] + sorted(data['Temporada'].unique()))
     if temporada != 'Todas':
@@ -159,5 +165,4 @@ elif page == "Comparação de Jogadores":
     # Exibir a tabela comparativa
     st.write(f"Comparando {jogador1} e {jogador2}:")
     st.dataframe(comparacao.reset_index(drop=True))
-
 
