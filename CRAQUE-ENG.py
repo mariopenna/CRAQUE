@@ -45,7 +45,7 @@ if page == "About":
 
     Inspired by FiveThirtyEight's RAPTOR model, the CRAQUE model leverages detailed statistics and algorithms to evaluate each player's unique contribution on the field and quantify wins above a replacement player, adjusted for playing time.
 
-    For more information, check out my presentation on LinkedIn: [LinkedIn Presentation](https://www.linkedin.com/feed/update/urn:li:activity:7226935140541710336/)
+    For more information, check out my presentation on LinkedIn: [LinkedIn Presentation](https://www.linkedin.com/posts/mariopennagouveafilho_craque-model-english-activity-7227282468389720064-KBR3?utm_source=share&utm_medium=member_desktop)
 
     Use the navigation menu on the left to explore graphical data analysis, view the general table with all players, or compare specific players.
     """)
