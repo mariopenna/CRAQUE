@@ -65,13 +65,18 @@ elif page == "Análise Geral":
 
     # Filtro por Idade
     idade_min, idade_max = st.slider('Selecione o intervalo de Idade', int(data['Idade'].min()), int(data['Idade'].max()), (int(data['Idade'].min()), int(data['Idade'].max())))
-    data_filtered = data[(data['Idade'] >= idade_min) & (data['Idade'] <= idade_max)]
 
-    # Aplicar filtros adicionais em data_filtered
+    # Filtro por Temporada
+    temporada = st.selectbox('Selecione uma Temporada', options=['Todas'] + sorted(data['Temporada'].unique()))
+
+    # Aplicar os filtros nos dados
+    data_filtered = data[(data['Idade'] >= idade_min) & (data['Idade'] <= idade_max)]
     if campeonato != 'Todos':
         data_filtered = data_filtered[data_filtered['Campeonato'] == campeonato]
     if squad != 'Todos':
         data_filtered = data_filtered[data_filtered['Time'] == squad]
+    if temporada != 'Todas':
+        data_filtered = data_filtered[data_filtered['Temporada'] == temporada]
 
     # Gráfico de dispersão com cores para diferentes times
     fig = px.scatter(
@@ -125,7 +130,11 @@ elif page == "Tabela":
         data = data[data['Jogador'] == jogador]
 
     idade_min, idade_max = st.slider('Filtrar por Idade', int(data['Idade'].min()), int(data['Idade'].max()), (int(data['Idade'].min()), int(data['Idade'].max())))
-    data = data[(data['Idade'] >= idade_min) & (data['Idade'] <= idade_max)]
+
+    # Filtro por Temporada
+    temporada = st.selectbox('Filtrar por Temporada', options=['Todas'] + sorted(data['Temporada'].unique()))
+    if temporada != 'Todas':
+        data = data[data['Temporada'] == temporada]
 
     # Exibir a tabela geral com todos os filtros aplicados
     st.dataframe(data, height=500, use_container_width=True)
@@ -137,8 +146,14 @@ elif page == "Comparação de Jogadores":
     jogador1 = st.selectbox('Selecione o Primeiro Jogador', options=data['Jogador'].unique())
     jogador2 = st.selectbox('Selecione o Segundo Jogador', options=data['Jogador'].unique())
 
+    # Filtro por Temporada
+    temporada = st.selectbox('Filtrar por Temporada', options=['Todas'] + sorted(data['Temporada'].unique()))
+    
     # Filtrar os dados dos jogadores selecionados
     comparacao = data[(data['Jogador'] == jogador1) | (data['Jogador'] == jogador2)]
+    if temporada != 'Todas':
+        comparacao = comparacao[comparacao['Temporada'] == temporada]
+    
     comparacao = comparacao[['Jogador', 'Time', 'Temporada', 'CRAQUE Ofensivo', 'CRAQUE Defensivo', 'WAR']]
 
     # Exibir a tabela comparativa
